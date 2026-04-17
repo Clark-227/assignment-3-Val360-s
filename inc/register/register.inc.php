@@ -5,9 +5,7 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 ini_set('log_errors', 1);
 
-require_once __DIR__ . "/../db/db_connect.inc.php";
-require_once __DIR__ . "/../functions/functions.inc.php";
-require_once __DIR__ . "/../app/config.inc.php";
+require_once 'inc/functions/functions.inc.php';
 
 $error_bucket = [];
 
@@ -17,6 +15,7 @@ $first_name = "";
 $last_name = "";
 $password = "";
 
+// Check if the form was submitted using $_SERVER['REQUEST_METHOD']
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     // // Check if CSRF token is present in the POST data and session
@@ -32,74 +31,55 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     //     die("Invalid CSRF token.");
     // }
 
+    // Get email, first_name, last_name from $_POST
     // First insure that all required fields are filled in
-    if (empty($_POST["first_name"])) {
-        array_push($error_bucket, "A first name is required.");
-    } else {
-        $first = $_POST["first_name"];
-    }
-    if (empty($_POST["last"])) {
-        array_push($error_bucket, "A last name is required.");
-    } else {
-        $last = $_POST["last"];
-    }
-    if (empty($_POST["student_id"])) {
-        array_push($error_bucket, "A student ID is required.");
-    } else {
-        $student_id = intval($_POST["student_id"]);
-    }
     if (empty($_POST["email"])) {
         array_push($error_bucket, "An email address is required.");
     } else {
         $email = $_POST["email"];
     }
-    if (empty($_POST["phone"])) {
-        array_push($error_bucket, "A phone number is required.");
+    if (empty($_POST["first_name"])) {
+        array_push($error_bucket, "A first name is required.");
     } else {
-        $phone = $_POST["phone"];
+        $first_name = $_POST["first_name"];
+    }
+    if (empty($_POST["last_name"])) {
+        array_push($error_bucket, "A last name is required.");
+    } else {
+        $last_name = $_POST["last_name"];
+    }
+    if (empty($_POST["password"])) {
+        array_push($error_bucket, "Password is required.");
+    } else {
+        $password = $_POST["password"];
     }
 
-    // Add new fields in the check for filled in fields and declare var if !empty
-    if (isset($_POST["gpa"])) {
-        $gpa = $_POST["gpa"];
-    } else {
-        $gpa = 0;
-    }
-    // Validate the financial aid field
-    if (!isset($_POST["financial_aid"]) || $_POST["financial_aid"] === "") {
-        array_push($error_bucket, "Financial Aid status is required.");
-    } else {
-        $financial_aid = intval($_POST["financial_aid"]);
-    }
+    // TODO 3: Hash the password using hash('sha512', ...)
+    $password = hash('sha512', $_POST['password']);
 
-    // The Degree Program is always set => declare the var
-    $degree_program = $_POST["degree_program"];
-
-    // If graduation date is not set 
-    if (!empty($_POST["graduation_date"])) {
-        $graduation_date = $_POST["graduation_date"];
-    } elseif ($_POST["graduation_date"] == "0000-00-00") {
-        $graduation_date = NULL;
-    } else {
-        $graduation_date = NULL;
-    }
-
+    // TODO 4: Write a SQL INSERT query to add a new user to the 'user' table
+    //         Columns: first_name, last_name, email, password
+    //         Use named placeholders :first_name, :last_name, :email, :password
     // If we have no errors than we can try and insert the data
     if (count($error_bucket) == 0) {
         // Time for some SQL
-        $sql = "INSERT INTO $db_table (first_name,last_name,email,phone,student_id,gpa,financial_aid,degree_program,graduation_date) ";
-        $sql .= "VALUES (:first,:last,:email,:phone,:student_id,:gpa,:financial_aid,:degree_program,:graduation_date)";
+        $sql = "INSERT INTO user (email,first_name,last_name,password) ";
+        $sql .= "VALUES (:email,:first_name,:last_name,:password)";
 
+        // Prepare and execute the query using PDO
+        // Pass the values as an associative array to $stmt->execute()
         $stmt = $db->prepare($sql);
-        $stmt->execute(["first" => $first, "last" => $last, "email" => $email, "phone" => $phone, "student_id" => $student_id, "gpa" => $gpa, "financial_aid" => $financial_aid, "degree_program" => $degree_program, "graduation_date" => $graduation_date]);
-
+        $stmt->execute(["first_name" => $first_name, "last_name" => $last_name, "email" => $email, "password" => $password]);
+        // TODO 6: Check if the insert was successful using $stmt->rowCount()
+        // If rowCount == 0: echo an error message
+        // If successful: echo "User successfully registered"
         if ($stmt->rowCount() == 0) {
             echo '<div class="alert alert-danger" role="alert">
             I am sorry, but I could not save that record for you.</div>';
         } else {
             // Optional: regenerate token after use
-            $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
-            header("Location: display-records.php?message=The record for <strong>" . $first . "</strong> has been created.");
+            // $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+            header("Location: home.php?message=The user <strong>" . $email . "</strong> successfully registered.");
         }
     } else {
         display_error_bucket($error_bucket);

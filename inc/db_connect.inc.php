@@ -6,7 +6,7 @@ $password = '';
 $dbname   = 'ctec';
 
 // Build the DSN (Data Source Name) string:
-$dsn = 'mysql:host=' . $host . ';dbname=' . $dbname;
+$dsn = 'mysql:host=' . $host . ';dbname=' . $dbname . ';charset=utf8mb4';
 
 // Create a new PDO instance:
 $db = new PDO($dsn, $user, $password);
