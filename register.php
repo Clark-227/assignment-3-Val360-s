@@ -4,7 +4,8 @@ $pageTitle = "Register";
 require 'inc/header.inc.php';
 require_once 'inc/db_connect.inc.php';
 
-// TODO 1: Check if the form was submitted using $_SERVER['REQUEST_METHOD']
+// Check if the form was submitted using $_SERVER['REQUEST_METHOD']
+
 
     // TODO 2: Get email, first_name, last_name from $_POST
 

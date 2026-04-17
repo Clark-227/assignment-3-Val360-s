@@ -1,19 +1,15 @@
 <?php
-// db_connect.inc.php
-// This file creates a PDO connection to the MySQL database.
-// It is included by other PHP files using require_once.
+// Create variables for your database connection:
+$host     = 'localhost';
+$user     = 'root';
+$password = '';
+$dbname   = 'ctec';
 
-// TODO 1: Create variables for your database connection:
-//   $host     = 'localhost'
-//   $user     = 'root'
-//   $password = ''          (XAMPP default has no password)
-//   $dbname   = 'ctec'
+// Build the DSN (Data Source Name) string:
+$dsn = 'mysql:host=' . $host . ';dbname=' . $dbname;
 
-// TODO 2: Build the DSN (Data Source Name) string:
-//   $dsn = 'mysql:host=' . $host . ';dbname=' . $dbname
+// Create a new PDO instance:
+$db = new PDO($dsn, $user, $password);
 
-// TODO 3: Create a new PDO instance:
-//   $db = new PDO($dsn, $user, $password)
-
-// TODO 4: Set the default fetch mode to return objects:
-//   $db->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ)
+// Set the default fetch mode to return objects:
+$db->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
