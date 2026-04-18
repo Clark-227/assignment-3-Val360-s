@@ -13,19 +13,19 @@ require_once 'inc/db_connect.inc.php';
             </div>
             <?php require_once 'inc/register/register.inc.php' ?>
             <form action="register.php" method="POST">
-                <label for="email">Email</label>
-                <input type="email" id="email" required name="email">
+                <label class="col-form-label" for="email">Email</label>
+                <input class="form-control" type="email" id="email" required name="email">
                 <br><br>
-                <label for="password">Password</label>
-                <input type="password" id="password" required name="password">
+                <label class="col-form-label" for="password">Password</label>
+                <input class="form-control" type="password" id="password" required name="password">
                 <br><br>
-                <label for="first_name">First Name</label>
-                <input type="text" id="first_name" required name="first_name">
+                <label class="col-form-label" for="first_name">First Name</label>
+                <input class="form-control" type="text" id="first_name" required name="first_name">
                 <br><br>
-                <label for="last_name">Last Name</label>
-                <input type="text" id="last_name" required name="last_name">
+                <label class="col-form-label" for="last_name">Last Name</label>
+                <input class="form-control" type="text" id="last_name" required name="last_name">
                 <br><br>
-                <input type="submit" value="Register">
+                <input class="btn btn-dark shadow" type="submit" value="Register">
             </form>
         </div>
     </div>

@@ -3,8 +3,12 @@
 // This file is called by JavaScript (fetch API) to check if a user is logged in.
 // It returns a JSON response: {"status": "yes"} or {"status": "no"}
 
-// TODO 1: Start the session
+// Start the session
+session_start();
 
-// TODO 2: Check if $_SESSION['first_name'] is set using isset()
-//         If yes: echo json_encode(["status" => "yes"])
-//         If no:  echo json_encode(["status" => "no"])
+// Check if $_SESSION['first_name'] is set using isset()
+if (isset($_SESSION['first_name'])) { // If yes: echo json_encode(["status" => "yes"])
+    echo json_encode(["status" => "yes"]);
+} else { // If no:  echo json_encode(["status" => "no"])
+    json_encode(["status" => "no"]);
+}
